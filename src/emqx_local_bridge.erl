@@ -63,8 +63,7 @@ init([Pool, Id, Node, Topic, Options]) ->
             Group = iolist_to_binary(["$bridge:", atom_to_list(Node), ":", Topic]),
             emqx_broker:subscribe(Topic, self(), #{share => Group, qos => ?QOS_0}),
             State = parse_opts(Options, #state{node = Node, subtopic = Topic}),
-            MQueue = emqx_mqueue:init(#{type => simple,
-                                        max_len => State#state.max_queue_len,
+            MQueue = emqx_mqueue:init(#{max_len => State#state.max_queue_len,
                                         store_qos0 => true}),
             {ok, State#state{pool = Pool, id = Id, mqueue = MQueue}};
         false ->
